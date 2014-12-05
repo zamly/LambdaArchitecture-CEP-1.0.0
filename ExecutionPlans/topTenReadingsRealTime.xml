@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<executionPlan name="topTenReadingsRealTime" statistics="disable"
+  trace="disable" xmlns="http://wso2.org/carbon/eventprocessor">
+  <description/>
+  <siddhiConfiguration>
+    <property name="siddhi.persistence.snapshot.time.interval.minutes">0</property>
+    <property name="siddhi.enable.distributed.processing">false</property>
+  </siddhiConfiguration>
+  <importedStreams>
+    <stream as="sensors" name="org.wso2.lambda.pressuresensor" version="1.0.0"/>
+  </importedStreams>
+  <queryExpressions><![CDATA[
+  define table topTenFromBAM (name string,value double, date double) 
+  from ('datasource.name'='topTenFromBAM', 'table.name'='TopTen');
+  
+  define table topTenFromCEP(value double, date long) 
+  from ('datasource.name'='topTenFromBAM', 'table.name'='topTenCEP', 'create.query'='CREATE TABLE topTenCEP (value DOUBLE, date LONG )' );
+         
+  from sensors#transform.MaxK:getMaxK(value, date, 10, 5) 
+select *
+insert into currentTopTen;
+
+from sensors
+delete topTenFromCEP
+on sensors.date != topTenFromCEP.date or sensors.date == topTenFromCEP.date;
+
+
+from currentTopTen
+  select max10, date10
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select max9, date9
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select max8, date8
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select max7, date7
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select max6, date6
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select max5, date5
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select max4, date4
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select max3, date3
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select max2, date2
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select max1, date1
+  insert into topTenFromCEP;
+
+]]></queryExpressions>
+  <exportedStreams>
+    <stream name="currentTopTen" valueOf="currentTopTenTemp" version="1.0.0"/>
+  </exportedStreams>
+</executionPlan>
+                                    
