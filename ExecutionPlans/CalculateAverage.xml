@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<executionPlan name="CalculateAverage" statistics="disable"
+  trace="disable" xmlns="http://wso2.org/carbon/eventprocessor">
+  <description/>
+  <siddhiConfiguration>
+    <property name="siddhi.persistence.snapshot.time.interval.minutes">0</property>
+    <property name="siddhi.enable.distributed.processing">false</property>
+  </siddhiConfiguration>
+  <importedStreams>
+    <stream as="sensors" name="org.wso2.lambda.pressuresensor" version="1.0.0"/>
+  </importedStreams>
+  <queryExpressions><![CDATA[
+  
+  define table averageFromCEP(timestamp long, count long, average double) 
+  from ('datasource.name'='averageDB', 'table.name'='averageCEP', 'create.query'='CREATE TABLE averageCEP (timestamp LONG, count long, average DOUBLE )' );
+  
+from sensors#window.timeBatch( 30 sec ) 
+select custom:getTimestamp() as timestamp, count(value) as count, avg(value) as average
+insert into averageFromCEP;
+
+
+ ]]></queryExpressions>
+  <exportedStreams>
+    <stream name="averageOutstream" valueOf="averageOutstream" version="1.0.0"/>
+  </exportedStreams>
+</executionPlan>
+                                    
