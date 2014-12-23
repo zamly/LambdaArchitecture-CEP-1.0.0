@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<executionPlan name="topTenReadingsRealTime" statistics="disable"
+  trace="disable" xmlns="http://wso2.org/carbon/eventprocessor">
+  <description/>
+  <siddhiConfiguration>
+    <property name="siddhi.persistence.snapshot.time.interval.minutes">0</property>
+    <property name="siddhi.enable.distributed.processing">false</property>
+  </siddhiConfiguration>
+  <importedStreams>
+    <stream as="sensors" name="org.wso2.lambda.pressuresensor" version="1.0.0"/>
+  </importedStreams>
+  <queryExpressions><![CDATA[
+ 
+  define table topTenFromCEP(batchTimestamp long, value double, date long) 
+  from ('datasource.name'='topTenFromBAM', 'table.name'='topTenCEP', 'create.query'='CREATE TABLE topTenCEP (batchTimestamp LONG, value DOUBLE, date LONG )' );
+         
+ from sensors#transform.MaxK:getMaxK(value, date, 10, 30) 
+select custom:getTimestamp() as batchTimestamp, max1, date1,max2, date2,max3, date3,max4, date4,max5, date5,max6, date6,
+max7, date7,max8, date8,max9, date9,max10, date10 output last every 30 sec
+insert into currentTopTen;
+
+
+from currentTopTen
+  select batchTimestamp, max10, date10
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select batchTimestamp, max9, date9
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select batchTimestamp, max8, date8
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select batchTimestamp, max7, date7
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select batchTimestamp, max6, date6
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select batchTimestamp, max5, date5
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select batchTimestamp, max4, date4
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select batchTimestamp, max3, date3
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select batchTimestamp, max2, date2
+  insert into topTenFromCEP;
+  
+  from currentTopTen
+  select batchTimestamp, max1, date1
+  insert into topTenFromCEP;
+
+]]></queryExpressions>
+  
+</executionPlan>
+                                    
