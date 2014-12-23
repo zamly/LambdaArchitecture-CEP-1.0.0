@@ -20,8 +20,6 @@ insert into averageFromCEP;
 
 
  ]]></queryExpressions>
-  <exportedStreams>
-    <stream name="averageOutstream" valueOf="averageOutstream" version="1.0.0"/>
-  </exportedStreams>
+  
 </executionPlan>
                                     
