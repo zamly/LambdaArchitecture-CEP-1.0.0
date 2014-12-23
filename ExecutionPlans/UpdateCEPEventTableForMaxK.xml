@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<executionPlan name="UpdateCEPEventTableForMaxK" statistics="disable"
+  trace="disable" xmlns="http://wso2.org/carbon/eventprocessor">
+  <description/>
+  <siddhiConfiguration>
+    <property name="siddhi.persistence.snapshot.time.interval.minutes">0</property>
+    <property name="siddhi.enable.distributed.processing">false</property>
+  </siddhiConfiguration>
+  <importedStreams>
+    <stream as="notifier" name="org.wso2.lambda.maxk.notifier" version="1.0.0"/>
+  </importedStreams>
+  <queryExpressions><![CDATA[define table topTenFromCEP(batchTimestamp long, value double, date long) 
+  from ('datasource.name'='topTenFromBAM', 'table.name'='topTenCEP', 'create.query'='CREATE TABLE topTenCEP (batchTimestamp LONG, value DOUBLE, date LONG )' );
+  
+  from notifier  
+delete topTenFromCEP
+on notifier.timestamp >= topTenFromCEP.date;
+
+]]></queryExpressions>
+  
+</executionPlan>
+                                    
