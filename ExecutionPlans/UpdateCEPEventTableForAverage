@@ -15,7 +15,5 @@
 from aveNotifier  
 delete averageFromCEP
 on aveNotifier.timestamp >= averageFromCEP.timestamp;]]></queryExpressions>
-  <exportedStreams>
-    <stream name="notifierOutStream" valueOf="notifierOutStream" version="1.0.0"/>
-  </exportedStreams>
+  
 </executionPlan>
